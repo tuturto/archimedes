@@ -21,7 +21,6 @@
 ;; THE SOFTWARE.
 
 (require archimedes)
-(require hy.contrib.anaphoric)
 
 (import [hypothesis [given example]]
         [hypothesis.strategies [integers]])
@@ -48,3 +47,16 @@
                 :b (integers :min-value 1))
       (sample :a 5 :b 5)
       (assert (>= (+ a b) 2)))
+
+(background some-numbers
+            [a 10]
+            [b 20])
+
+(fact "background can be defined and used"
+      (with-background some-numbers [a b]
+        (assert (= (+ a b) 30))))
+
+(fact "background can be used with variants"
+      (variants :c (integers :min-value 30))
+      (with-background some-numbers [a b]
+        (assert (>= (+ a b c) 60))))
