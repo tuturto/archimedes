@@ -1,0 +1,4 @@
+archimedes.egg-info/
+.hypothesis/
+.pyc
+__pycache__/
