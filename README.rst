@@ -46,17 +46,17 @@ Syntax:
 
 .. code-block::
 
-   <background> ::= "(" "background" <symbol> <symbol-value>* ")"
-   <symbol-value> ::= "[" <symbol> <s-expression> "]"
-   <fact> ::= "(" "fact" <string>
-                  [<variants> | <variants-sample>]
-                  [<with-background>]
-                  <s-expression>* ")"
-   <variants> ::= "(" "variants" <variant-spec>* ")"
+        <background> ::= "(" "background" <symbol> <symbol-value>* ")"
+      <symbol-value> ::= "[" <symbol> <s-expression> "]"
+              <fact> ::= "(" "fact" <string>
+                             [<variants> | <variants-sample>]
+                             [<with-background>]
+                             <s-expression>* ")"
+          <variants> ::= "(" "variants" <variant-spec>* ")"
    <variants-sample> ::= "(" "variants" <variant-spec>* ")"
                          "(" "sample" <sample-spec>* ")"
-   <variant-spec> ::= <keyword> <strategy>
-   <sample-spec> ::= <keyword> <s-expression>
+      <variant-spec> ::= <keyword> <strategy>
+       <sample-spec> ::= <keyword> <s-expression>
    <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
                              <s-expression>* ")"
 
