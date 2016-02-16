@@ -53,14 +53,14 @@
           (= 'sample (first (second code)))
           false))
 
-  (defn create-code-block []
+  (defn create-code-block [code]
     "create test function body"
     (cond [(and (variants?)
-                (samples?)) `(~@(rest (rest code)))]
-          [(variants?) `(~@(rest code))]
-          [true code]))
+                (samples?)) `(do ~@(rest (rest code)))]
+          [(variants?) `(do ~@(rest code))]
+          [true `(do ~@code)]))
 
-  (defn create-func-definition [res &rest foo]
+  (defn create-func-definition [res]
     "create function header and splice in res"
     (let [[fn-name (HySymbol (.join "" ["test_" (.replace (str desc) " " "_")]))]
           [param-list (if (variants?)                        
@@ -68,26 +68,31 @@
                         `[])]]
       `(defn ~fn-name ~param-list
          ~desc         
-       ~@res)) )
+         ~res)))
 
-  (defn create-sample-decorator [res &rest foo]
+  (defn create-sample-decorator [res]
     "create decorator for sample data and splice in res"
     (if (samples?)      
       `(with-decorator (example ~@(rest (second code)))
          ~res)
       res))
 
-  (defn create-given-decorator [res &rest foo]
+  (defn create-settings-decorator [res]
+    res)
+
+  (defn create-given-decorator [res]
     "create decorator for test data generators and splice in res"
-    (if (variants?)
+    (if (variants?)      
       `(with-decorator (given ~@(rest (first code)))
-         ~res)
+         ~res)      
       res))
 
-  (-> (create-code-block)
-      (create-func-definition)
-      (create-sample-decorator)
-      (create-given-decorator)))
+  (-> code
+      create-code-block
+      create-func-definition
+      create-sample-decorator
+      create-settings-decorator
+      create-given-decorator))
 
 (defmacro/g! with-background [context-name symbols &rest code]    
   (let [[fn-name (HySymbol (.join "" ["setup_" context-name]))]]
