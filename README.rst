@@ -57,7 +57,7 @@ Syntax:
                          "(" "sample" <sample-spec>* ")"
    <variant-spec> ::= <keyword> <strategy>
    <sample-spec> ::= <keyword> <s-expression>
-   <with-background> ::= "(" "with-background" <symbol> "[" symbol* "]" 
+   <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
                              <s-expression>* ")"
 
 Details are needed sometimes:
