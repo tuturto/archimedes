@@ -84,6 +84,9 @@
          ~res)      
       res))
 
+  (when (> (len (variants)) 1) (macro-error nil "too many variants forms"))
+  (when (> (len (samples)) 1) (macro-error nil "too many samples forms"))
+
   (-> code
       create-code-block
       create-func-definition
