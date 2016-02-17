@@ -51,10 +51,15 @@
     "get samples forms"
     (list-comp (rest branch) [branch code] (= 'sample (first branch))))
 
+  (defn profiles []
+    "get profile forms"
+    (list-comp (rest branch) [branch code] (= 'profile (first branch))))
+
   (defn create-code-block [code]
     "create test function body"
     `(do ~@(list (ap-filter (and (not (= 'variants (first it)))
-                                 (not (= 'sample (first it))))
+                                 (not (= 'sample (first it)))
+                                 (not (= 'profile (first it))))
                             code))))
 
   (defn create-func-definition [res]
@@ -75,6 +80,8 @@
       res))
 
   (defn create-settings-decorator [res]
+    (if (profiles)
+      `(with-decorator (settings ~@(first (profiles)))))
     res)
 
   (defn create-given-decorator [res]
@@ -86,6 +93,7 @@
 
   (when (> (len (variants)) 1) (macro-error nil "too many variants forms"))
   (when (> (len (samples)) 1) (macro-error nil "too many samples forms"))
+  (when (> (len (profiles)) 1) (macro-error nil "too many profile forms"))
 
   (-> code
       create-code-block

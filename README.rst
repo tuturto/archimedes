@@ -2,9 +2,10 @@ Hy macros for Hypothesis framework
 ==================================
 
 Archimedes is a set of Hy macros that are used to make writing tests with
-Hypothesis easier. ``fact`` specified a test case, ``variants`` and
-``sample`` specify rules for test data generation, ``background`` and
-``with-background`` specify common data between tests.
+Hypothesis easier. ``fact`` specifies a test case, ``variants`` and
+``sample`` specify rules for test data generation, ``profile`` specifies
+test settings, ``background`` and ``with-background`` specify common data
+between tests.
 
 Examples are good:
 ------------------
@@ -41,24 +42,29 @@ Examples are good:
          (sample :a 0 :b 0)
          (assert (<= 0 (+ a b) 20)))
 
+   (fact "profile controls test settings"
+         (variants :a (integers :min-size 0))
+         (profile :max-examples 500)
+         (assert (<= 0 a)))
+
 Syntax:
 -------
 
 .. code-block::
 
         <background> ::= "(" "background" <symbol> <symbol-value>* ")"
-      <symbol-value> ::= "[" <symbol> <s-expression> "]"
+      <symbol-value> ::= "[" <symbol> <sexp> "]"
               <fact> ::= "(" "fact" <string>
-                             [<variants> | <variants-sample>]
+                             [<variants> [<sample>] [<profile>]]
                              [<with-background>]
-                             <s-expression>* ")"
+                             <sexp>* ")"
           <variants> ::= "(" "variants" <variant-spec>* ")"
-   <variants-sample> ::= "(" "variants" <variant-spec>* ")"
-                         "(" "sample" <sample-spec>* ")"
+            <sample> ::= "(" "sample" <keyword-sexp>* ")"
+           <profile> ::= "(" "profile" <keyword-sexp>* ")"
       <variant-spec> ::= <keyword> <strategy>
-       <sample-spec> ::= <keyword> <s-expression>
+      <keyword-sexp> ::= <keyword> <sexp>
    <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
-                             <s-expression>* ")"
+                             <sexp>* ")"
 
 Details are needed sometimes:
 -----------------------------
@@ -90,6 +96,9 @@ in ``given`` decorator.
 ``(sample keyword value)`` specifies sample set of values. Keyword specifies
 symbol and value holds the value bound to it. It should have same amount of
 keywords as ``variants`` form and can't be used without ``variants`` form.
+
+``(profile keyword value)`` specifies test settings. They match directly to
+parameters given to ``settings`` decorator.
 
 Note about test framework:
 --------------------------

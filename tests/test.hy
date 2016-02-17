@@ -37,6 +37,11 @@
       (sample :a 5)
       (assert (>= a 1)))
 
+(fact "profile controls some of the test settings"
+      (variants :a (integers :min-value 10))
+      (profile :max-examples 10)
+      (assert (>= a 10)))
+
 (fact "facts with multiple variants can be specified"
       (variants :a (integers :min-value 1)
                 :b (integers :min-value 1))
