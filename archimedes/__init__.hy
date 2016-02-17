@@ -42,29 +42,26 @@
         (yield val)
         (setv val [])))
     (when val (yield val)))
-  
-  (defn variants? []
-    "check if variants are specified"
-    (= 'variants (first (first code))))
 
-  (defn samples? []
-    "check if samples are specified"
-    (if (>= (len code) 2)
-          (= 'sample (first (second code)))
-          false))
+  (defn variants []
+    "get variants forms"
+    (list-comp (rest branch) [branch code] (= 'variants (first branch))))
+
+  (defn samples []
+    "get samples forms"
+    (list-comp (rest branch) [branch code] (= 'sample (first branch))))
 
   (defn create-code-block [code]
     "create test function body"
-    (cond [(and (variants?)
-                (samples?)) `(do ~@(rest (rest code)))]
-          [(variants?) `(do ~@(rest code))]
-          [true `(do ~@code)]))
+    `(do ~@(list (ap-filter (and (not (= 'variants (first it)))
+                                 (not (= 'sample (first it))))
+                            code))))
 
   (defn create-func-definition [res]
     "create function header and splice in res"
     (let [[fn-name (HySymbol (.join "" ["test_" (.replace (str desc) " " "_")]))]
-          [param-list (if (variants?)                        
-                        (list (ap-map (HySymbol (name (first it))) (group (rest (first code)))))
+          [param-list (if (variants)                        
+                        (list (ap-map (HySymbol (name (first it))) (group (first (variants)))))
                         `[])]]
       `(defn ~fn-name ~param-list
          ~desc         
@@ -72,8 +69,8 @@
 
   (defn create-sample-decorator [res]
     "create decorator for sample data and splice in res"
-    (if (samples?)      
-      `(with-decorator (example ~@(rest (second code)))
+    (if (samples)      
+      `(with-decorator (example ~@(first (samples)))
          ~res)
       res))
 
@@ -82,8 +79,8 @@
 
   (defn create-given-decorator [res]
     "create decorator for test data generators and splice in res"
-    (if (variants?)      
-      `(with-decorator (given ~@(rest (first code)))
+    (if (variants)      
+      `(with-decorator (given ~@(first (variants)))
          ~res)      
       res))
 
