@@ -81,14 +81,26 @@
 
   (defn create-settings-decorator [res]
     (if (profiles)
-      `(with-decorator (settings ~@(first (profiles)))))
-    res)
+      `(with-decorator (settings ~@(first (profiles)))
+         ~res)
+      res))
 
   (defn create-given-decorator [res]
     "create decorator for test data generators and splice in res"
     (if (variants)      
       `(with-decorator (given ~@(first (variants)))
          ~res)      
+      res))
+
+  (defn create-importer [res]
+    "create wrapping function to perform some imports"
+    (if (variants)
+      (let [[fn-name (HySymbol (.join "" ["test_" (.replace (str desc) " " "_")]))]]
+      `(defn ~fn-name []
+         ~desc
+         (import [hypothesis [given example settings]])
+         ~res
+         (~fn-name)))
       res))
 
   (when (> (len (variants)) 1) (macro-error nil "too many variants forms"))
@@ -100,7 +112,8 @@
       create-func-definition
       create-sample-decorator
       create-settings-decorator
-      create-given-decorator))
+      create-given-decorator
+      create-importer))
 
 (defmacro/g! with-background [context-name symbols &rest code]    
   (let [[fn-name (HySymbol (.join "" ["setup_" context-name]))]]

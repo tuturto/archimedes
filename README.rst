@@ -14,8 +14,7 @@ Examples are good:
 
    (require archimedes)
    
-   (import [hypothesis [given example]]
-           [hypothesis.strategies [integers]]
+   (import [hypothesis.strategies [integers]]
            [math [pow]])
 
    (fact "true is always true"

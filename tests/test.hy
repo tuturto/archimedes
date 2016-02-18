@@ -22,8 +22,7 @@
 
 (require archimedes)
 
-(import [hypothesis [given example]]
-        [hypothesis.strategies [integers]])
+(import [hypothesis.strategies [integers]])
 
 (fact "simple facts can be specified"
       (assert true))
@@ -39,7 +38,7 @@
 
 (fact "profile controls some of the test settings"
       (variants :a (integers :min-value 10))
-      (profile :max-examples 10)
+      (profile :max-examples 50)
       (assert (>= a 10)))
 
 (fact "facts with multiple variants can be specified"
