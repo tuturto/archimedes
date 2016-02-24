@@ -64,3 +64,10 @@
       (variants :c (integers :min-value 30))
       (with-background some-numbers [a b]
         (assert (>= (+ a b c) 60))))
+
+(fact "macro error can be asserted"
+      (assert-macro-error "too many variants forms"
+                          (fact "I'm incorrect"
+                                (variants :a (integers))
+                                (variants :a (integers))
+                                (assert (= a a)))))

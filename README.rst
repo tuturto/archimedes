@@ -5,7 +5,8 @@ Archimedes is a set of Hy macros that are used to make writing tests with
 Hypothesis easier. ``fact`` specifies a test case, ``variants`` and
 ``sample`` specify rules for test data generation, ``profile`` specifies
 test settings, ``background`` and ``with-background`` specify common data
-between tests.
+between tests. ``assert-macro-error`` checks that ``macro-error`` is
+called with given message during macro expansion.
 
 Examples are good:
 ------------------
@@ -46,24 +47,32 @@ Examples are good:
          (profile :max-examples 500)
          (assert (<= 0 a)))
 
+   (fact "macro error can be asserted"
+         (assert-macro-error "too many variants forms"
+                             (fact "I'm incorrect"
+                                   (variants :a (integers))
+                                   (variants :a (integers))
+                                   (assert (= a a)))))
+
 Syntax:
 -------
 
 .. code-block::
 
-        <background> ::= "(" "background" <symbol> <symbol-value>* ")"
-      <symbol-value> ::= "[" <symbol> <sexp> "]"
-              <fact> ::= "(" "fact" <string>
-                             [<variants> [<sample>] [<profile>]]
-                             [<with-background>]
+           <background> ::= "(" "background" <symbol> <symbol-value>* ")"
+         <symbol-value> ::= "[" <symbol> <sexp> "]"
+                 <fact> ::= "(" "fact" <string>
+                                [<variants> [<sample>] [<profile>]]
+                                [<with-background>]
+                                <sexp>* ")"
+             <variants> ::= "(" "variants" <variant-spec>* ")"
+               <sample> ::= "(" "sample" <keyword-sexp>* ")"
+              <profile> ::= "(" "profile" <keyword-sexp>* ")"
+         <variant-spec> ::= <keyword> <strategy>
+         <keyword-sexp> ::= <keyword> <sexp>
+      <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
                              <sexp>* ")"
-          <variants> ::= "(" "variants" <variant-spec>* ")"
-            <sample> ::= "(" "sample" <keyword-sexp>* ")"
-           <profile> ::= "(" "profile" <keyword-sexp>* ")"
-      <variant-spec> ::= <keyword> <strategy>
-      <keyword-sexp> ::= <keyword> <sexp>
-   <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
-                             <sexp>* ")"
+   <assert-macro-error> ::= "(" "assert-macro-error" <string> <sexp> ")"
 
 Details are needed sometimes:
 -----------------------------
@@ -98,6 +107,9 @@ keywords as ``variants`` form and can't be used without ``variants`` form.
 
 ``(profile keyword value)`` specifies test settings. They match directly to
 parameters given to ``settings`` decorator.
+
+``(assert-macro-error message code)`` asserts that during macro expansion of
+``code`` an error is raised with a message of ``message``.
 
 Note about test framework:
 --------------------------

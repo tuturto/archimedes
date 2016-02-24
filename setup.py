@@ -33,7 +33,7 @@ install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0']
 
 setup(
     name='archimedes',
-    version='0.0.1',
+    version='0.0.2',
     install_requires=install_requires,
     packages=find_packages(exclude=['tests*']),
     package_data={
