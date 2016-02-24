@@ -115,20 +115,20 @@
       create-given-decorator
       create-importer))
 
-(defmacro assert-macro-error [error-str code]
-  `(let [[result (try
-                  (do
-                   (import [hy.errors [HyMacroExpansionError]])
-                   (macroexpand (quote ~code))
-                   "no exception raised")
-                  (catch [e HyMacroExpansionError]
-                    (if (= (. e message) ~error-str)
-                      nil
-                      (.format "expected: '{0}'\n  got: '{1}'"
-                               ~error-str
-                               (. e message)))))]]
-     (when result
-       (assert false result))))
+(defmacro/g! assert-macro-error [error-str code]
+  `(let [[~g!result (try
+                     (do
+                      (import [hy.errors [HyMacroExpansionError]])
+                      (macroexpand (quote ~code))
+                      "no exception raised")
+                     (catch [~g!e HyMacroExpansionError]
+                       (if (= (. ~g!e message) ~error-str)
+                         nil
+                         (.format "expected: '{0}'\n  got: '{1}'"
+                                  ~error-str
+                                  (. ~g!e message)))))]]
+     (when ~g!result
+       (assert false ~g!result))))
 
 (defmacro/g! with-background [context-name symbols &rest code]    
   (let [[fn-name (HySymbol (.join "" ["setup_" context-name]))]]
