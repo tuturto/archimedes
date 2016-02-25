@@ -20,10 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# import os
-# import re
-# import sys
-
 from setuptools import find_packages, setup
 
 long_description = """Archimedes is very minimal set of macros that make

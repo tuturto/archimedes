@@ -47,7 +47,11 @@ Examples are good:
          (profile :max-examples 500)
          (assert (<= 0 a)))
 
-   (fact "macro error can be asserted"
+   (fact "macro errors can be asserted"
+         (assert-macro-error "cond branches need to be a list"
+                             (cond (= 1 1) true)))
+
+   (fact "even fact can be asserted for macro errors"
          (assert-macro-error "too many variants forms"
                              (fact "I'm incorrect"
                                    (variants :a (integers))
