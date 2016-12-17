@@ -83,6 +83,7 @@ Syntax:
       <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
                              <sexp>* ")"
    <assert-macro-error> ::= "(" "assert-macro-error" <string> <sexp> ")"
+         <assert-error> ::= "(" "assert-error" <string> <sexp> ")"
 
 Details are needed sometimes:
 -----------------------------
