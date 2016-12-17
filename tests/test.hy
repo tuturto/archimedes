@@ -72,4 +72,6 @@
                                 (variants :a (integers))
                                 (assert (= a a)))))
 
-
+(fact "errors can be asserted"
+      (assert-error "error"
+                    (raise (ValueError "error"))))

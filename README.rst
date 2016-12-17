@@ -6,7 +6,8 @@ Hypothesis easier. ``fact`` specifies a test case, ``variants`` and
 ``sample`` specify rules for test data generation, ``profile`` specifies
 test settings, ``background`` and ``with-background`` specify common data
 between tests. ``assert-macro-error`` checks that ``macro-error`` is
-called with given message during macro expansion.
+called with given message during macro expansion. For regular errors and
+exceptions, use ``assert-error``.
 
 Examples are good:
 ------------------
@@ -57,6 +58,11 @@ Examples are good:
                                    (variants :a (integers))
                                    (variants :a (integers))
                                    (assert (= a a)))))
+
+   (fact "errors can be asserted"
+         (assert-error "error"
+                       (raise (ValueError "error"))))
+
 
 Syntax:
 -------
@@ -114,6 +120,9 @@ parameters given to ``settings`` decorator.
 
 ``(assert-macro-error message code)`` asserts that during macro expansion of
 ``code`` an error is raised with a message of ``message``.
+
+``(assert-error message code)`` asserts that code raises an error, which
+string representation is equal to message.
 
 Note about test framework:
 --------------------------

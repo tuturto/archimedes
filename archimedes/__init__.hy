@@ -130,6 +130,20 @@
      (when ~g!result
        (assert false ~g!result))))
 
+(defmacro/g! assert-error [error-str code]
+  "assert that an error is raised"
+  `(let [[~g!result (try 
+                     (do ~code
+                         "no exception raised")
+                     (catch [~g!e Exception]
+                       (if (= (str ~g!e) ~error-str)
+                         nil
+                         (.format "expected: '{0}'\n  got: '{1}'"
+                                  ~error-str
+                                  (str ~g!e)))))]]     
+     (when ~g!result
+        (assert false ~g!result))))
+
 (defmacro/g! with-background [context-name symbols &rest code]    
   (let [[fn-name (HySymbol (.join "" ["setup_" context-name]))]]
     `(let [[~g!context (~fn-name)]
