@@ -16,6 +16,9 @@ is ``assert-right``.
 For interactive mode, it's sometimes easier to execute ``fact``
 immediately. For this case, use ``check``.
 
+Only Hypothesis is installed as a dependency. Hamcrest and Hymn have to
+be installed separately.
+
 Examples are good:
 ------------------
 
@@ -71,21 +74,21 @@ Examples are good:
                        (raise (ValueError "error"))))
 
    (check "this is executed immediately"
-          (assert (= 1 2)))
+          (assert (= 1 1)))
 
    (defmacther is-zero? []
                :match? (= value 0)
                :match! "a zero"
                :no-match! (.format "was a value of {0}" item))
 
-   (assert-that value (is-zero?))
+   (assert-that 0 (is-zero?))
 
    (attribute-matcher item-with-length?
                       len =
                       "an item with length {0}"
                       "was an item with length {0}")
 
-   (assert-that value (is- (item-with-length? 5)))
+   (assert-that "foo" (is- (item-with-length? 3)))
 
 
 Syntax:
