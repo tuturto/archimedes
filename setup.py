@@ -25,7 +25,7 @@ from setuptools import setup
 long_description = """Archimedes is very minimal set of macros that make
 writing tests with Hy, Hypothesis and Hamcrest more fun. """
 
-install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0', 'PyHamcrest>=1.9.0']
+install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0']
 
 setup(
     name='libarchimedes',
