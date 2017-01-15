@@ -9,6 +9,12 @@ between tests. ``assert-macro-error`` checks that ``macro-error`` is
 called with given message during macro expansion. For regular errors and
 exceptions, use ``assert-error``.
 
+In case you're using PyHamcrest, there's two macros to help you define
+matchers: ``defmatcher`` and ``attribute-matcher``.
+
+For interactive mode, it's sometimes easier to execute ``fact``
+immediately. For this case, use ``check``.
+
 Examples are good:
 ------------------
 
@@ -63,6 +69,23 @@ Examples are good:
          (assert-error "error"
                        (raise (ValueError "error"))))
 
+   (check "this is executed immediately"
+          (assert (= 1 2)))
+
+   (defmacther is-zero? []
+               :match? (= value 0)
+               :match! "a zero"
+               :no-match! (.format "was a value of {0}" item))
+
+   (assert-that value (is-zero?))
+
+   (attribute-matcher item-with-length?
+                      len =
+                      "an item with length {0}"
+                      "was an item with length {0}")
+
+   (assert-that value (is- (item-with-length? 5)))
+
 
 Syntax:
 -------
@@ -75,6 +98,10 @@ Syntax:
                                 [<variants> [<sample>] [<profile>]]
                                 [<with-background>]
                                 <sexp>* ")"
+                <check> ::= "(" "fact" <string>
+                                [<variants> [<sample>] [<profile>]]
+                                [<with-background>]
+                                <sexp>* ")"
              <variants> ::= "(" "variants" <variant-spec>* ")"
                <sample> ::= "(" "sample" <keyword-sexp>* ")"
               <profile> ::= "(" "profile" <keyword-sexp>* ")"
@@ -84,6 +111,12 @@ Syntax:
                              <sexp>* ")"
    <assert-macro-error> ::= "(" "assert-macro-error" <string> <sexp> ")"
          <assert-error> ::= "(" "assert-error" <string> <sexp> ")"
+         <assert-right> ::= "(" "assert-right" <sexp> <sexp> ")"
+          <def-matcher> ::= "(" "def-matcher" <symbol> "[" <symbol>* "]"
+                                <keyword> <sexp>* ")"
+    <attribute-matcher> ::= "(" "attribute-matcher" <symbol> 
+                                <symbol> <symbol>
+                                <string> <string> ")"
 
 Details are needed sometimes:
 -----------------------------
@@ -99,6 +132,10 @@ string describing what the test is about. The generated function will have a
 name ``"test_" + description`` and no arguments. Docstring of the function
 will be value of ``description``. ``code`` can be one or more forms of code,
 they are inserted inside of the test function as is.
+
+``(check description code)`` works just like ``fact``, except that the
+resulting test function is immediately executed. This is useful when working
+in interactive envinroment, like Jupyter or Hy repl.
 
 ``(with-background name symbols code)`` generates a let binding with code to call
 background specified by ``name``. ``symbols`` is list of symbols that should
@@ -124,6 +161,50 @@ parameters given to ``settings`` decorator.
 
 ``(assert-error message code)`` asserts that code raises an error, which
 string representation is equal to message.
+
+``(def-matcher name parameters :match? code :match! string :no-match string)``
+is used to create matcher function for hamcrest library. The resulting
+matcher can then be used in assertions. Since the macro creates a behind the
+scenes class, all parameters passed to it are accessible as instance
+attributes. In ``match?``, ``match!`` and ``no-match!`` blocks, symbol
+``item`` is bound to item currently under comparison.
+
+.. code-block::
+
+   (defmatcher length-of? [value]
+               :match? (= (len item) self.value)
+               :match! (.format "an item with length of {0} 
+                                self.value)
+               :no-match (.format "was an item with length of {0}"
+                                  (len item)))
+
+   (assert-that value (is- (lenght-of? 5)))
+
+``(attribute-matcher name function predicate string string)`` is a special
+case for matcher, where function is used to check a value of some matched
+item and then compared to given value using predicate. Thus, the previous
+example can be written as:
+
+.. code-block::
+
+   (attribute-matcher length-of?
+                      len =
+                      "an item with length of {0}"
+                      "was an item with length of {0}")
+
+   (assert-that value (is- (length-of? 5)))
+
+``assert-right`` is used with Hymn library's ``Either`` monad. It first
+checks that ``right`` was returned as a result of computation and then
+proceeds to run assertion block:
+
+.. code-block::
+
+   (assert-right (do-monad [status (advance-time-m society)]
+                            status)
+                 (assert-that society
+                              (has-less-resources-than? old-resources)))
+
 
 Note about test framework:
 --------------------------
