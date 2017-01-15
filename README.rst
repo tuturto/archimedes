@@ -10,7 +10,8 @@ called with given message during macro expansion. For regular errors and
 exceptions, use ``assert-error``.
 
 In case you're using PyHamcrest, there's two macros to help you define
-matchers: ``defmatcher`` and ``attribute-matcher``.
+matchers: ``defmatcher`` and ``attribute-matcher``. And for Hymn, there
+is ``assert-right``.
 
 For interactive mode, it's sometimes easier to execute ``fact``
 immediately. For this case, use ``check``.
