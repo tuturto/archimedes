@@ -115,6 +115,59 @@
       create-given-decorator
       create-importer))
 
+(defmacro check [fact-name &rest code]
+          "define and execute a fact"
+          `(try ((fact ~fact-name ~@code))
+                (catch [e Exception] 
+                       (do (setv desc (str e))
+                           (if (and (> (len desc) 0)
+                                    (!= (first desc) "\n"))
+                               (setv desc (+ "\n" desc)))
+                           (print (+ "Failure: " ~fact-name desc))))
+                (else (print (+ "Ok: " ~fact-name)))))
+
+(defmacro defmatcher [matcher-name params &rest funcs]
+  "define matcher class and function"
+
+  (defn group [seq &optional [n 2]]
+    "group list to lists of size n"
+    (setv val [])
+    (for [x seq]
+      (.append val x)
+      (when (>= (len val) n)
+        (yield val)
+        (setv val [])))
+    (when val (yield val)))
+
+  (defn helper [match? match! no-match!]
+    `(defn ~matcher-name ~params
+       (import [hamcrest.core.base-matcher [BaseMatcher]])
+
+       (defclass MatcherClass [BaseMatcher]
+         [[--init-- (fn [self ~@params]
+                      ~@(genexpr `(setv (. self ~x) ~x) [x params])
+                      nil)]
+          [-matches (fn [self item]
+                      ~match?)]
+          [describe-to (fn [self description]
+                         (.append description ~match!))]
+          [describe-mismatch (fn [self item mismatch-description]
+                               (.append mismatch-description ~no-match!))]])
+
+       (MatcherClass ~@params)))
+
+  (apply helper [] (dict-comp (cond [(= (first x) :match?) "is_match"]
+                                    [(= (first x) :match!) "match!"]
+                                    [(= (first x) :no-match!) "no_match!"])
+                              (second x)
+                              [x (group funcs)])))
+
+(defmacro attribute-matcher [matcher-name func pred match no-match]
+  `(defmatcher ~matcher-name [value]
+     :match? (~pred (~func item) value)
+     :match! (.format ~match (. self value))
+     :no-match! (.format ~no-match (~func item))))
+
 (defmacro/g! assert-macro-error [error-str code]
   `(let [[~g!result (try
                      (do
@@ -143,6 +196,14 @@
                                   (str ~g!e)))))]]     
      (when ~g!result
         (assert false ~g!result))))
+
+(defmacro/g! assert-right [monad check]
+  "helper macro for asserting Either.Right"
+  `(either (fn [~g!fail]
+             (assert False (str ~g!fail)))
+           (fn [~g!ok]
+             ~check)
+           ~monad))
 
 (defmacro/g! with-background [context-name symbols &rest code]    
   (let [[fn-name (HySymbol (.join "" ["setup_" context-name]))]]
