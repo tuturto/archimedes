@@ -14,7 +14,7 @@ Examples are good:
 
 .. code-block:: hy
 
-   (require libarchimedes)
+   (require archimedes)
    
    (import [hypothesis.strategies [integers]]
            [math [pow]])

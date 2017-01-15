@@ -29,12 +29,12 @@ install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0', 'PyHamcrest>=1.9.0']
 
 setup(
     name='libarchimedes',
-    version='0.0.5',
+    version='0.0.7',
     install_requires=install_requires,
-    packages=['libarchimedes'],
-    package_dir={'libarchimedes': 'src/libarchimedes'},
+    packages=['archimedes'],
+    package_dir={'archimedes': 'src/archimedes'},
     package_data={
-        'libarchimedes': ['*.hy']
+        'archimedes': ['*.hy']
     },
     author="Tuukka Turto",
     author_email="tuukka.turto@oktaeder.net",
