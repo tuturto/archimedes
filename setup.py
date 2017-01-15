@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016 Tuukka Turto
+# Copyright (c) 2016-2017 Tuukka Turto
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,13 +23,13 @@
 from setuptools import find_packages, setup
 
 long_description = """Archimedes is very minimal set of macros that make
-writing tests with Hy and Hypothesis more fun. """
+writing tests with Hy, Hypothesis and Hamcrest more fun. """
 
 install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0']
 
-setup(
-    name='archimedes',
-    version='0.0.2',
+etup(
+    name='archimedes-lib',
+    version='0.0.3',
     install_requires=install_requires,
     packages=find_packages(exclude=['tests*']),
     package_data={
@@ -38,7 +38,7 @@ setup(
     author="Tuukka Turto",
     author_email="tuukka.turto@oktaeder.net",
     long_description=long_description,
-    description='Hy macros for Hypothesis',
+    description='Hy macros for Hypothesis (among orther things)',
     license="MIT",
     url="http://github.com/tuturto/archimedes",
     platforms=['any'],
