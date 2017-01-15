@@ -20,20 +20,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 long_description = """Archimedes is very minimal set of macros that make
 writing tests with Hy, Hypothesis and Hamcrest more fun. """
 
-install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0']
+install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0', 'PyHamcrest>=1.9.0']
 
-etup(
-    name='archimedes-lib',
-    version='0.0.3',
+setup(
+    name='libarchimedes',
+    version='0.0.5',
     install_requires=install_requires,
-    packages=find_packages(exclude=['tests*']),
+    packages=['libarchimedes'],
+    package_dir={'libarchimedes': 'src/libarchimedes'},
     package_data={
-        'archimedes': ['*.hy']
+        'libarchimedes': ['*.hy']
     },
     author="Tuukka Turto",
     author_email="tuukka.turto@oktaeder.net",
