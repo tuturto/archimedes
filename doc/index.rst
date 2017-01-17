@@ -10,11 +10,15 @@ Welcome to archimedes's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   intro
+   facts_and_checks
+   hypothesis
+   errors
+   hamcrest
+   hymn
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
