@@ -76,8 +76,8 @@ Examples are good:
    (check "this is executed immediately"
           (assert (= 1 1)))
 
-   (defmacther is-zero? []
-               :match? (= value 0)
+   (defmatcher is-zero? []
+               :match? (= item 0)
                :match! "a zero"
                :no-match! (.format "was a value of {0}" item))
 
