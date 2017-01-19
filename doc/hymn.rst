@@ -21,4 +21,4 @@ fails too.
                  (assert-that society
                               (has-less-resources-than? old-resources)))
 
-_hymn: http://hymn.readthedocs.io/en/latest/
+.. _hymn: http://hymn.readthedocs.io/en/latest/

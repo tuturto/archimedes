@@ -44,6 +44,8 @@ While ``defmatcher`` is powerful and can be used to define all kinds of
 matchers, sometimes a simple one is needed. For these times 
 ``attribute-matcher`` is sufficient:
 
+.. code-block:: hy
+
    (attribute-matcher item-with-length?
                       len =
                       "an item with length {0}"
@@ -57,6 +59,8 @@ macro will always result to a matcher that takes a single parameter defining
 some sort of value, which is then compared to result of the function. Handy
 trick is to use dot notation to access object method:
 
+.. code-block:: hy
+
    (attribute-matcher object-with-name?
                       .name =
                       "an object with name {0}"
@@ -64,4 +68,4 @@ trick is to use dot notation to access object method:
 
    (assert-that obj (is- (object-with-name? "foo")))
 
-_hamcrest: https://pypi.python.org/pypi/PyHamcrest
+.. _hamcrest: https://pypi.python.org/pypi/PyHamcrest
