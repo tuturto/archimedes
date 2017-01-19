@@ -10,6 +10,6 @@ Installation
 
 Preferred installation method is pip (in virtualenv or equivalent)::
 
-   pip install archimedes
+   pip install libarchimedes
 
 .. _nose: http://nose.readthedocs.io/en/latest/

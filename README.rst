@@ -19,6 +19,8 @@ immediately. For this case, use ``check``.
 Only Hypothesis is installed as a dependency. Hamcrest and Hymn have to
 be installed separately.
 
+For more comprehensive documentation, see http://archimedes.readthedocs.io/
+
 Examples are good:
 ------------------
 
