@@ -22,30 +22,21 @@
 
 (import [hy [HySymbol]])
 
-(require hy.contrib.anaphoric)
+(require [hy.extra.anaphoric [*]])
 
 (defmacro background [context-name &rest code]
-  (let [[symbols (ap-map (first it) code)]
-        [fn-name (HySymbol (.join "" ["setup_" context-name]))]]
+  (let [symbols (ap-map (first it) (partition code))
+        fn-name (HySymbol (.join "" ["setup_" context-name]))]
     `(defn ~fn-name []
        ~(.join "" ["setup context " context-name])
        (let [~@code]
          ~(dict-comp (keyword x) x [x symbols])))))
 
 (defmacro fact [desc &rest code]
-  (defn group [seq &optional [n 2]]
-    "group list to lists of size n"
-    (setv val [])
-    (for [x seq]
-      (.append val x)
-      (when (>= (len val) n)
-        (yield val)
-        (setv val [])))
-    (when val (yield val)))
 
   (defn variants []
     "get variants forms"
-    (list-comp (rest branch) [branch code] (= 'variants (first branch))))
+    (list-comp (list (rest branch)) [branch code] (= 'variants (first branch))))
 
   (defn samples []
     "get samples forms"
@@ -64,10 +55,11 @@
 
   (defn create-func-definition [res]
     "create function header and splice in res"
-    (let [[fn-name (HySymbol (.join "" ["test_" (.replace (str desc) " " "_")]))]
-          [param-list (if (variants)                        
-                        (list (ap-map (HySymbol (name (first it))) (group (first (variants)))))
-                        `[])]]
+    (let [fn-name (HySymbol (.join "" ["test_" (.replace (str desc) " " "_")]))
+          param-list (if (variants)                        
+                       (list (ap-map (HySymbol (name (first it))) 
+                                     (list (partition (first (variants))))))
+                       `[])]
       `(defn ~fn-name ~param-list
          ~desc         
          ~res)))
@@ -95,7 +87,8 @@
   (defn create-importer [res]
     "create wrapping function to perform some imports"
     (if (variants)
-      (let [[fn-name (HySymbol (.join "" ["test_" (.replace (str desc) " " "_")]))]]
+      (let [fn-name (HySymbol (.join "" 
+                                     ["test_" (.replace (str desc) " " "_")]))]
       `(defn ~fn-name []
          ~desc
          (import [hypothesis [given example settings]])
@@ -103,9 +96,9 @@
          (~fn-name)))
       res))
 
-  (when (> (len (variants)) 1) (macro-error nil "too many variants forms"))
-  (when (> (len (samples)) 1) (macro-error nil "too many samples forms"))
-  (when (> (len (profiles)) 1) (macro-error nil "too many profile forms"))
+  (when (> (len (variants)) 1) (macro-error None "too many variants forms"))
+  (when (> (len (samples)) 1) (macro-error None "too many samples forms"))
+  (when (> (len (profiles)) 1) (macro-error None "too many profile forms"))
 
   (-> code
       create-code-block
@@ -118,7 +111,7 @@
 (defmacro check [fact-name &rest code]
           "define and execute a fact"
           `(try ((fact ~fact-name ~@code))
-                (catch [e Exception] 
+                (except [e Exception] 
                        (do (setv desc (str e))
                            (if (and (> (len desc) 0)
                                     (!= (first desc) "\n"))
@@ -129,38 +122,27 @@
 (defmacro defmatcher [matcher-name params &rest funcs]
   "define matcher class and function"
 
-  (defn group [seq &optional [n 2]]
-    "group list to lists of size n"
-    (setv val [])
-    (for [x seq]
-      (.append val x)
-      (when (>= (len val) n)
-        (yield val)
-        (setv val [])))
-    (when val (yield val)))
-
   (defn helper [match? match! no-match!]
     `(defn ~matcher-name ~params
        (import [hamcrest.core.base-matcher [BaseMatcher]])
 
        (defclass MatcherClass [BaseMatcher]
-         [[--init-- (fn [self ~@params]
-                      ~@(genexpr `(setv (. self ~x) ~x) [x params])
-                      nil)]
-          [-matches (fn [self item]
-                      ~match?)]
-          [describe-to (fn [self description]
-                         (.append description ~match!))]
-          [describe-mismatch (fn [self item mismatch-description]
-                               (.append mismatch-description ~no-match!))]])
+         [--init-- (fn [self ~@params]
+                     ~@(genexpr `(setv (. self ~x) ~x) [x params]))
+          -matches (fn [self item]
+                     ~match?)
+          describe-to (fn [self description]
+                        (.append description ~match!))
+          describe-mismatch (fn [self item mismatch-description]
+                              (.append mismatch-description ~no-match!))])
 
        (MatcherClass ~@params)))
 
-  (apply helper [] (dict-comp (cond [(= (first x) :match?) "is_match"]
-                                    [(= (first x) :match!) "match!"]
-                                    [(= (first x) :no-match!) "no_match!"])
+  (apply helper [] (dict-comp (if (= (first x) :match?) "is_match"
+                                  (= (first x) :match!) "match!"
+                                  (= (first x) :no-match!) "no_match!")
                               (second x)
-                              [x (group funcs)])))
+                              [x (partition funcs)])))
 
 (defmacro attribute-matcher [matcher-name func pred match no-match]
   `(defmatcher ~matcher-name [value]
@@ -169,33 +151,33 @@
      :no-match! (.format ~no-match (~func item))))
 
 (defmacro/g! assert-macro-error [error-str code]
-  `(let [[~g!result (try
-                     (do
-                      (import [hy.errors [HyMacroExpansionError]])
-                      (macroexpand (quote ~code))
-                      "no exception raised")
-                     (catch [~g!e HyMacroExpansionError]
-                       (if (= (. ~g!e message) ~error-str)
-                         nil
-                         (.format "expected: '{0}'\n  got: '{1}'"
-                                  ~error-str
-                                  (. ~g!e message)))))]]
+  `(let [~g!result (try
+                    (do
+                     (import [hy.errors [HyMacroExpansionError]])
+                     (macroexpand (quote ~code))
+                     "no exception raised")
+                    (except [~g!e HyMacroExpansionError]
+                      (if (= (. ~g!e message) ~error-str)
+                        None
+                        (.format "expected: '{0}'\n  got: '{1}'"
+                                 ~error-str
+                                 (. ~g!e message)))))]
      (when ~g!result
-       (assert false ~g!result))))
+       (assert False ~g!result))))
 
 (defmacro/g! assert-error [error-str code]
   "assert that an error is raised"
-  `(let [[~g!result (try 
-                     (do ~code
-                         "no exception raised")
-                     (catch [~g!e Exception]
-                       (if (= (str ~g!e) ~error-str)
-                         nil
-                         (.format "expected: '{0}'\n  got: '{1}'"
-                                  ~error-str
-                                  (str ~g!e)))))]]     
+  `(let [~g!result (try 
+                    (do ~code
+                        "no exception raised")
+                    (except [~g!e Exception]
+                      (if (= (str ~g!e) ~error-str)
+                        None
+                        (.format "expected: '{0}'\n  got: '{1}'"
+                                 ~error-str
+                                 (str ~g!e)))))]     
      (when ~g!result
-        (assert false ~g!result))))
+        (assert False ~g!result))))
 
 (defmacro/g! assert-right [monad check]
   "helper macro for asserting Either.Right"
@@ -206,7 +188,10 @@
            ~monad))
 
 (defmacro/g! with-background [context-name symbols &rest code]    
-  (let [[fn-name (HySymbol (.join "" ["setup_" context-name]))]]
-    `(let [[~g!context (~fn-name)]
-           ~@(ap-map `[~it (get ~g!context ~(keyword it))] symbols)]
+  (let [fn-name (HySymbol (.join "" ["setup_" context-name]))]    
+    `(let [~g!context (~fn-name)
+           ~@(reduce (fn [acc item]
+                       (+ acc [item `(get ~g!context ~(keyword item))]))
+                     symbols
+                     [])]
        ~@code)))

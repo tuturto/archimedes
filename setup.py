@@ -25,11 +25,11 @@ from setuptools import setup
 long_description = """Archimedes is very minimal set of macros that make
 writing tests with Hy, Hypothesis and Hamcrest more fun. """
 
-install_requires = ['hy>=0.11.1', 'hypothesis>=2.0.0']
+install_requires = ['hy>=0.12.0', 'hypothesis>=3.6.1']
 
 setup(
     name='libarchimedes',
-    version='0.3.0',
+    version='0.4.0',
     install_requires=install_requires,
     packages=['archimedes'],
     package_dir={'archimedes': 'src/archimedes'},
@@ -49,11 +49,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Lisp",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Topic :: Software Development :: Libraries",
     ]
 )

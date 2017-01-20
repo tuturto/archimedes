@@ -20,12 +20,12 @@
 ;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ;; THE SOFTWARE.
 
-(require archimedes)
+(require [archimedes [*]])
 
 (import [hypothesis.strategies [integers]])
 
 (fact "simple facts can be specified"
-      (assert true))
+      (assert True))
 
 (fact "facts with variants can be specified"
       (variants :a (integers :min-value 1))
@@ -53,8 +53,8 @@
       (assert (>= (+ a b) 2)))
 
 (background some-numbers
-            [a 10]
-            [b 20])
+            a 10
+            b 20)
 
 (fact "background can be defined and used"
       (with-background some-numbers [a b]

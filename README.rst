@@ -35,9 +35,9 @@ Examples are good:
          (assert true))
 
    (background some-numbers
-         [a 3]
-         [b 4]
-         [c 5])
+         a 3
+         b 4
+         c 5)
 
    (fact "Pythagorean theorem holds in this specific case"
          (with-background some-numbers [a b c]
@@ -92,46 +92,14 @@ Examples are good:
 
    (assert-that "foo" (is- (item-with-length? 3)))
 
-
-Syntax:
--------
-
-.. code-block::
-
-           <background> ::= "(" "background" <symbol> <symbol-value>* ")"
-         <symbol-value> ::= "[" <symbol> <sexp> "]"
-                 <fact> ::= "(" "fact" <string>
-                                [<variants> [<sample>] [<profile>]]
-                                [<with-background>]
-                                <sexp>* ")"
-                <check> ::= "(" "fact" <string>
-                                [<variants> [<sample>] [<profile>]]
-                                [<with-background>]
-                                <sexp>* ")"
-             <variants> ::= "(" "variants" <variant-spec>* ")"
-               <sample> ::= "(" "sample" <keyword-sexp>* ")"
-              <profile> ::= "(" "profile" <keyword-sexp>* ")"
-         <variant-spec> ::= <keyword> <strategy>
-         <keyword-sexp> ::= <keyword> <sexp>
-      <with-background> ::= "(" "with-background" <symbol> "[" <symbol>* "]" 
-                             <sexp>* ")"
-   <assert-macro-error> ::= "(" "assert-macro-error" <string> <sexp> ")"
-         <assert-error> ::= "(" "assert-error" <string> <sexp> ")"
-         <assert-right> ::= "(" "assert-right" <sexp> <sexp> ")"
-          <def-matcher> ::= "(" "def-matcher" <symbol> "[" <symbol>* "]"
-                                <keyword> <sexp>* ")"
-    <attribute-matcher> ::= "(" "attribute-matcher" <symbol> 
-                                <symbol> <symbol>
-                                <string> <string> ")"
-
 Details are needed sometimes:
 -----------------------------
 
 ``(background name elements)`` defines setup function. Name is symbol. Name
-of the test function will be ``"setup_" + name``. ``elements`` is one or more
-two element lists with first element as symbol and second as value of it.
-The setup function will return a dictionary with keywordified symbols as keys
-and corresponding values as their values.
+of the test function will be ``"setup_" + name``. ``elements`` is a list
+of alternating symbols and their values. The setup function will return a 
+dictionary with keywordified symbols as keys and corresponding values as 
+their values.
 
 ``(fact description code)`` specifies a test function. ``description`` is a
 string describing what the test is about. The generated function will have a

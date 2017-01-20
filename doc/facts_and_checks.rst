@@ -40,9 +40,9 @@ is in order:
 .. code-block:: hy
 
    (background some-numbers
-     [a 3]
-     [b 4]
-     [c 5])
+     a 3
+     b 4
+     c 5)
 
    (fact "sum of two numbers"
      (with-background some-numbers [a b]
