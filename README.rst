@@ -21,6 +21,9 @@ be installed separately.
 
 For more comprehensive documentation, see http://archimedes.readthedocs.io/
 
+Also, Archimedes_ was a Greek mathematician, physicist, engineer, inventor
+and astronomer.
+
 Examples are good:
 ------------------
 
@@ -190,3 +193,5 @@ License:
 --------
 
 Licensed under MIT license
+
+.. _Archimedes: https://en.wikipedia.org/wiki/Archimedes
