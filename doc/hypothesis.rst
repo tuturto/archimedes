@@ -25,7 +25,7 @@ Below is an example test case that showcases usage of all these elements.
 
 .. code-block:: hy
 
-   (require archimedes)
+   (require [archimedes [fact]])
    (import [hypothesis.strategies [integers]])
 
    (fact "sum of two positive numbers is larger than either one of them"

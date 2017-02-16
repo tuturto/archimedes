@@ -29,7 +29,9 @@ Examples are good:
 
 .. code-block:: hy
 
-   (require archimedes)
+   (require [archimedes [background fact check defmatcher attribute-matcher 
+                         assert-macro-error assert-error assert-right
+                         with-background])
    
    (import [hypothesis.strategies [integers]]
            [math [pow]])
