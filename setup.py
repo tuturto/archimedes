@@ -29,7 +29,7 @@ install_requires = ['hy>=0.12.1', 'hypothesis>=3.6.1']
 
 setup(
     name='libarchimedes',
-    version='0.4.0',
+    version='0.4.1',
     install_requires=install_requires,
     packages=['archimedes'],
     package_dir={'archimedes': 'src/archimedes'},

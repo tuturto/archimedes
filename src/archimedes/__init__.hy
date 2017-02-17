@@ -122,7 +122,7 @@
 (defmacro defmatcher [matcher-name params &rest funcs]
   "define matcher class and function"
 
-  (defn helper [match? match! no-match!]
+  (defn helper [pred ok nok]
     `(defn ~matcher-name ~params
        (import [hamcrest.core.base-matcher [BaseMatcher]])
 
@@ -130,17 +130,17 @@
          [--init-- (fn [self ~@params]
                      ~@(genexpr `(setv (. self ~x) ~x) [x params]))
           -matches (fn [self item]
-                     ~match?)
+                     ~pred)
           describe-to (fn [self description]
-                        (.append description ~match!))
+                        (.append description ~ok))
           describe-mismatch (fn [self item mismatch-description]
-                              (.append mismatch-description ~no-match!))])
+                              (.append mismatch-description ~nok))])
 
        (MatcherClass ~@params)))
 
-  (apply helper [] (dict-comp (if (= (first x) :match?) "is_match"
-                                  (= (first x) :match!) "match!"
-                                  (= (first x) :no-match!) "no_match!")
+  (apply helper [] (dict-comp (if (= (first x) :match?) "pred"
+                                  (= (first x) :match!) "ok"
+                                  (= (first x) :no-match!) "nok")
                               (second x)
                               [x (partition funcs)])))
 
