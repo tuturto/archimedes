@@ -31,7 +31,7 @@ Examples are good:
 
    (require [archimedes [background fact check defmatcher attribute-matcher 
                          assert-macro-error assert-error assert-right
-                         with-background])
+                         with-background]])
    
    (import [hypothesis.strategies [integers]]
            [math [pow]])
