@@ -34,6 +34,7 @@ Examples are good:
                          with-background]])
    
    (import [hypothesis.strategies [integers]]
+           [hamcrest [assert-that]]
            [math [pow]])
 
    (fact "true is always true"
