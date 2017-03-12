@@ -38,7 +38,7 @@ Examples are good:
            [math [pow]])
 
    (fact "true is always true"
-         (assert true))
+         (assert True))
 
    (background some-numbers
          a 3
@@ -68,7 +68,7 @@ Examples are good:
 
    (fact "macro errors can be asserted"
          (assert-macro-error "cond branches need to be a list"
-                             (cond (= 1 1) true)))
+                             (cond (= 1 1) True)))
 
    (fact "even fact can be asserted for macro errors"
          (assert-macro-error "too many variants forms"
