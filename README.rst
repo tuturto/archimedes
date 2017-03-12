@@ -50,19 +50,19 @@ Examples are good:
            (assert (= (+ (pow a 2) (pow b 2)) (pow c 2)))))
 
    (fact "sum of two positive numbers is larger than either one of them"
-         (variants :a (integers :min-size 1)
-                   :b (integers :min-size 1))
+         (variants :a (integers :min-value 1)
+                   :b (integers :min-value 1))
          (assert (> (+ a b) a))
          (assert (> (+ a b) b)))
 
    (fact "example can clarify things"
-         (variants :a (integers :min-size 0 :max-size 10)
-                   :b (integers :min-size 0 :max-size 10))
+         (variants :a (integers :min-value 0 :max-value 10)
+                   :b (integers :min-value 0 :max-value 10))
          (sample :a 0 :b 0)
          (assert (<= 0 (+ a b) 20)))
 
    (fact "profile controls test settings"
-         (variants :a (integers :min-size 0))
+         (variants :a (integers :min-value 0))
          (profile :max-examples 500)
          (assert (<= 0 a)))
 
