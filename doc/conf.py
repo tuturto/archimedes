@@ -47,8 +47,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'archimedes'
-copyright = '2017, Tuukka Turto'
-author = 'Tuukka Turto'
+copyright = '2017, Tuula Turto'
+author = 'Tuula Turto'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

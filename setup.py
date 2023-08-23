@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2016-2017 Tuukka Turto
+# Copyright (c) 2016-2017 Tuula Turto
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,8 @@ setup(
     package_data={
         'archimedes': ['*.hy']
     },
-    author="Tuukka Turto",
-    author_email="tuukka.turto@oktaeder.net",
+    author="Tuula Turto",
+    author_email="tuula.turto@oktaeder.net",
     long_description=long_description,
     description='Hy macros for Hypothesis (among orther things)',
     license="MIT",
